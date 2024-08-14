@@ -10,11 +10,14 @@ points = [
     [51.52, -0.12]
 ]
 
-folium.PolyLine(
+#the idea is get the edges of each area and fill the area with the predicted price,
+# green for money
+folium.Polygon(
     locations=points,
-    color='blue',
-    weight=5,
-    opacity=0.7 
+    color='green',        
+    fill=True,           
+    fill_color='blue',   
+    fill_opacity=0.5     
 ).add_to(m)
 
 m.save('map.html')
