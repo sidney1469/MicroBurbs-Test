@@ -1,6 +1,7 @@
 import numpy as np
 import pandas as pd
 from sklearn.linear_model import LinearRegression
+from sklearn.impute import SimpleImputer
 import matplotlib.pyplot as plt
 
 data = pd.read_csv("forecast_history.csv")
@@ -16,18 +17,16 @@ most_correlated_forecast = correlations.dropna().idxmax()
 X = data[['year', most_correlated_forecast]].dropna().values
 y = data['Median Growth (%)'].dropna().values[:len(X)]
 
+imputer = SimpleImputer(strategy='mean')
+X_imputed = imputer.fit_transform(X)
+
 model = LinearRegression()
-model.fit(X, y)
+model.fit(X_imputed, y)
 
 future_years = np.array([[2025, np.nan], [2026, np.nan], [2027, np.nan]])
+
+future_years[:, 1] = np.mean(data[most_correlated_forecast].dropna().values)
+
 future_predictions = model.predict(future_years)
 
-plt.figure(figsize=(10, 6))
-plt.scatter(data['year'], data['Median Growth (%)'], label='Actual Growth', color='blue')
-plt.plot(data['year'], model.predict(X), label='Fitted Line', color='red')
-plt.scatter(future_years[:, 0], future_predictions, label='Future Predictions', color='green')
-plt.xlabel('Year')
-plt.ylabel('Median Growth (%)')
-plt.title('Median House Price Growth Prediction')
-plt.legend()
-plt.show()
+print(str(future_predictions))
