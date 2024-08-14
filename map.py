@@ -10,7 +10,7 @@ points = [
     [51.52, -0.12]
 ]
 
-#the idea is get the edges of each area and fill the area with the predicted price,
+# the idea is get the edges of each area and fill the area with the colour correlated with the predicted price,
 # green for money
 folium.Polygon(
     locations=points,
